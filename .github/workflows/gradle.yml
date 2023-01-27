@@ -39,10 +39,10 @@ jobs:
     - name: Copy Jar
       run: cp ./build/libs/*.jar ./deploy/
     - name: Make zip file
-      run: zip -r -qq -j ./springboot-intro-build.zip ./deploy
+      run: zip -r -qq -j ./my-server.zip ./deploy
     - name: Deliver to AWS S3
       env:
        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
-      run: aws s3 cp --region ap-northeast-2 ./springboot-intro-build.zip s3://${{ secrets.AWS_S3_BUILD_DIR }}
+      run: aws s3 cp --region ap-northeast-2 ./my-server.zip s3://${{ secrets.AWS_S3_BUILD_DIR }}
       
