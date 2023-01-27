@@ -42,8 +42,7 @@ jobs:
       run: zip -r -qq -j ./springboot-intro-build.zip ./deploy
     - name: Deliver to AWS S3
       env:
-       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_IAM_DEPLOY_ACCESS_KEY }}
-       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_IAM_DEPLOY_SECRET_KEY }}
-      #run: aws s3 cp --region ap-northeast-2 ./springboot-intro-build.zip s3://bigthbucket/
-      run: aws s3 sync ./deploy s3://bigthbucket/ --region ap-northeast-2
+       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+      run: aws s3 cp --region ap-northeast-2 ./springboot-intro-build.zip s3://bigthbucket/
       
