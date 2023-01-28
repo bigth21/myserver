@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<label for="name">String Length Calculator</label>
+<form class="string-calculator" th:action="@{/string-calculator/calculate}">
+    <input type="text" id="name" name="str" required maxlength="255"
+           th:placeholder="${str} ? _ :'String to be calculated'"
+           th:value = "${str}">
+    <button type="submit">Calculate</button>
+</form>
+<span th:if="${charsLength} != null" th:text="|Characters Length: ${charsLength}|"></span> <br>
+<span th:if="${bytesLength} != null" th:text="|Bytes Length: ${bytesLength}|"></span>
+</body>
+</html>
+
+
+<style>
+    label {
+        display: block;
+        font: 1rem 'Fira Sans', sans-serif;
+        margin: 0.4rem 0;
+    }
+
+    input {
+        margin: 0.4rem 0;
+    }
+</style>
