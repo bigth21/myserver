@@ -17,7 +17,7 @@ public class StringCalculationController {
     @GetMapping
     public String stringCalculator(Model model) {
         model.addAttribute("result", "");
-        return "/string-calculator";
+        return "string-calculator";
     }
 
     @GetMapping("/calculate")
@@ -25,6 +25,6 @@ public class StringCalculationController {
         model.addAttribute("str", str);
         model.addAttribute("charsLength", stringCalculationService.calculateCharsLength(str));
         model.addAttribute("bytesLength", stringCalculationService.calculateBytesLength(str));
-        return "/string-calculator";
+        return "string-calculator";
     }
 }
