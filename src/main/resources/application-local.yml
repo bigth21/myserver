@@ -7,3 +7,7 @@ spring:
   jpa:
     open-in-view: false
 
+  security:
+    user:
+      name: ENC(PzxhyS2jnzUTGLFlLktsr39y0i0k1k5v)
+      password: ENC(YZyVBZaMn2WHAh75ZmSEeFqnaXGidmGl)
