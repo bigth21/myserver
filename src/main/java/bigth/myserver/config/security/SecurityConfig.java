@@ -1,4 +1,4 @@
-package bigth.myserver.security;
+package bigth.myserver.config.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

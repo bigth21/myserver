@@ -1,6 +1,5 @@
-package bigth.myserver.encdec;
+package bigth.myserver.config.encdec;
 
-import bigth.myserver.encdec.KMS;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
