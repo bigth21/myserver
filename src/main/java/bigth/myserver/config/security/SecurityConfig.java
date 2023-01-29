@@ -21,6 +21,9 @@ public class SecurityConfig {
                 .formLogin()
 
                 .and()
+                .rememberMe()
+
+                .and()
                 .build();
     }
 }
