@@ -6,7 +6,7 @@ import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class JasyptConfig {
 
     private final String ENCRYPTED_KEY = "AQICAHhDd11ecqbBy1k+OZKqV1U3ZMGoRl/WhqdDWXcihgT6hQGTQFDLvZfMMrTkUNlOWtkKAAAAdjB0BgkqhkiG9w0BBwagZzBlAgEAMGAGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMW4AeMqqRsFn82+SRAgEQgDNKlMbpwG3UUopCg87cfYoPqCN61zjMGdOhkowazXEDxpc931JDSRODFlKdG6BTmu6nusE=";
