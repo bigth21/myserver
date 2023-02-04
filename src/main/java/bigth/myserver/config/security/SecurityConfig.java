@@ -14,8 +14,9 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests()
-                .requestMatchers("/admin/**").authenticated()
-                .anyRequest().permitAll()
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/string-calculator/**").permitAll()
+                .anyRequest().authenticated()
 
                 .and()
                 .formLogin()
