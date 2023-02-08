@@ -8,13 +8,13 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class MemberRole {
+public class UserRole {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "memberId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member;
+    private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roleId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Role role;

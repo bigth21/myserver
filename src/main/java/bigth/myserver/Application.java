@@ -8,10 +8,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,19 +28,19 @@ public class Application {
     @Slf4j
     @Transactional
     public static class DataInit implements ApplicationRunner {
-        private final MemberRepository memberRepository;
-        private final MemberRoleRepository memberRoleRepository;
+        private final UserRepository userRepository;
+        private final UserRoleRepository userRoleRepository;
         private final RoleRepository roleRepository;
 
         @Override
         public void run(ApplicationArguments args) throws Exception {
             log.info("Data initialization starts");
-            var member = Member.builder()
+            var member = User.builder()
                     .username("superkorean")
                     .password("1111")
                     .email("taekhyeon.nam@gmail.com")
                     .build();
-            memberRepository.save(member);
+            userRepository.save(member);
             List<Role> roles = new ArrayList<>();
             roles.add(Role.builder()
                     .name(ROLE_USER)
@@ -53,12 +50,12 @@ public class Application {
                     .build());
             roleRepository.saveAll(roles);
             var memberRoles = roles.stream()
-                    .map(r -> MemberRole.builder()
+                    .map(r -> UserRole.builder()
                             .role(r)
-                            .member(member)
+                            .user(member)
                             .build())
                     .collect(Collectors.toList());
-            memberRoleRepository.saveAll(memberRoles);
+            userRoleRepository.saveAll(memberRoles);
             log.info("Data initialization ends");
         }
     }
