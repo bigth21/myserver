@@ -13,7 +13,7 @@ public class UserRole {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    @JoinColumn(name = "userId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "roleId", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
