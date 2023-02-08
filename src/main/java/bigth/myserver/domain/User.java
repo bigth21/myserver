@@ -1,5 +1,6 @@
 package bigth.myserver.domain;
 
+import bigth.myserver.domain.config.BaseTimes;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Getter
-public class User {
+public class User extends BaseTimes {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
