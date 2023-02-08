@@ -19,9 +19,10 @@ import java.time.LocalDateTime;
 public class BaseTimes {
 
     @CreatedDate
-    @Column(updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column(nullable = false)
     private LocalDateTime updatedDate;
 }

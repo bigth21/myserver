@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name = "UNQ_User_Username", columnNames = "username"))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -13,10 +14,10 @@ public class User extends BaseTimes {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true, nullable = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String username;
     @Column(nullable = false, length = 100)
     private String password;
-    @Column(unique = true, nullable = false, length = 50)
+    @Column(nullable = false, length = 50)
     private String email;
 }
