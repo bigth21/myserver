@@ -3,6 +3,7 @@ package bigth.myserver;
 import bigth.myserver.domain.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -29,6 +30,13 @@ public class Application {
     @Slf4j
     @Transactional
     public static class DataInit implements ApplicationRunner {
+
+        @Value("${admin.username}")
+        private String adminUsername;
+        @Value("${admin.password}")
+        private String adminPassword;
+        @Value("${admin.email}")
+        private String adminEmail;
         private final UserRepository userRepository;
         private final UserRoleRepository userRoleRepository;
         private final RoleRepository roleRepository;
@@ -38,9 +46,9 @@ public class Application {
         public void run(ApplicationArguments args) throws Exception {
             log.info("Data initialization starts");
             var member = User.builder()
-                    .username("superkorean")
-                    .password(passwordEncoder.encode("1111"))
-                    .email("taekhyeon.nam@gmail.com")
+                    .username(adminUsername)
+                    .password(passwordEncoder.encode(adminPassword))
+                    .email(adminEmail)
                     .build();
             userRepository.save(member);
             List<Role> roles = new ArrayList<>();
