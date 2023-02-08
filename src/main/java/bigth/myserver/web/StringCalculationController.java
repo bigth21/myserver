@@ -1,6 +1,6 @@
 package bigth.myserver.web;
 
-import bigth.myserver.StringCalculationService;
+import bigth.myserver.service.StringCalculationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

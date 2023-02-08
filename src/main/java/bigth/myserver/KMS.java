@@ -1,4 +1,4 @@
-package bigth.myserver.config.encdec;
+package bigth.myserver;
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
