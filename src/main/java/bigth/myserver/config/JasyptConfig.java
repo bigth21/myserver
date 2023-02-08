@@ -1,4 +1,4 @@
-package bigth.myserver;
+package bigth.myserver.config;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
