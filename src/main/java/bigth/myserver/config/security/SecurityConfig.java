@@ -1,4 +1,4 @@
-package bigth.myserver.config;
+package bigth.myserver.config.security;
 
 import bigth.myserver.domain.UserRepository;
 import bigth.myserver.domain.UserRoleRepository;

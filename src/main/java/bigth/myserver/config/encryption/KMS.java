@@ -1,4 +1,4 @@
-package bigth.myserver.config;
+package bigth.myserver.config.encryption;
 
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.regions.Regions;
