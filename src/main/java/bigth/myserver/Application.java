@@ -8,6 +8,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
+    @Profile("local")
     @Component
     @RequiredArgsConstructor
     @Slf4j
@@ -44,7 +46,7 @@ public class Application {
         private final PasswordEncoder passwordEncoder;
 
         @Override
-        public void run(ApplicationArguments args) throws Exception {
+        public void run(ApplicationArguments args) {
             log.info("Data initialization starts");
             var member = User.builder()
                     .username(adminUsername)
