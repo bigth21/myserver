@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,6 +43,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/string-calculator/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/users/sign-up").permitAll()
+                .requestMatchers(HttpMethod.POST, "/users/sign-up").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

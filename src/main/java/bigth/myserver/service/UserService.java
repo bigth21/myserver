@@ -6,6 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static bigth.myserver.domain.Role.Type.ROLE_ADMIN;
 import static bigth.myserver.domain.Role.Type.ROLE_USER;
 
@@ -24,7 +26,8 @@ public class UserService {
         if (isUserPresent(username))
             throw new IllegalArgumentException("User already exist");
         var user = saveUser(username, password, email);
-        var role = saveRole(ROLE_USER);
+        var role = roleRepository.findByName(ROLE_USER)
+                .orElseThrow();
         return mapUserAndRole(user, role).getUser().getId();
     }
 
@@ -33,7 +36,8 @@ public class UserService {
         if (isUserPresent(username))
             throw new IllegalArgumentException("Administrator already exist");
         var user = saveUser(username, password, email);
-        var role = saveRole(ROLE_ADMIN);
+        var role = roleRepository.findByName(ROLE_ADMIN)
+                .orElseThrow();
         return mapUserAndRole(user, role).getUser().getId();
     }
 
@@ -41,12 +45,6 @@ public class UserService {
         return userRoleRepository.save(UserRole.builder()
                 .user(user)
                 .role(role)
-                .build());
-    }
-
-    private Role saveRole(Role.Type roleUser) {
-        return roleRepository.save(Role.builder()
-                .name(roleUser)
                 .build());
     }
 
