@@ -1,7 +1,13 @@
 package bigth.myserver.web;
 
 import bigth.myserver.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +29,21 @@ public class UserController {
                          @RequestParam String password,
                          @RequestParam String email) {
         userService.createUser(username, password, email);
-        return "redirect:/login";
+        return "redirect:/sign-in";
+    }
+
+    @GetMapping("/sign-in")
+    public String signIn() {
+        return "users/sign-in";
+    }
+
+    @GetMapping("/sign-out")
+    public String signOut(HttpServletRequest request, HttpServletResponse response) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        }
+        return "redirect:/";
     }
 
     @GetMapping("/my-page")

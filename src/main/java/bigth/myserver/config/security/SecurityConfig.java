@@ -47,10 +47,14 @@ public class SecurityConfig {
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/strings/**").permitAll()
                 .requestMatchers("/users/sign-up").permitAll()
+                .requestMatchers("/users/sign-in").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
                 .formLogin()
+                .loginPage("/users/sign-in")
+                .loginProcessingUrl("/login-proc")
+                .defaultSuccessUrl("/")
                 .and()
                 .rememberMe()
                 .and()
@@ -73,6 +77,16 @@ public class SecurityConfig {
 
                 .and()
                 .formLogin()
+                .loginPage("/users/sign-in")
+                .loginProcessingUrl("/login-proc")
+                .defaultSuccessUrl("/")
+                .and()
+                .rememberMe()
+                .and()
+                .logout()
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.sendRedirect("/");
+                })
 
                 .and()
                 .build();

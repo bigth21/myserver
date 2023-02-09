@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -11,9 +11,10 @@
 <img src="https://bigthbucket.s3.ap-northeast-2.amazonaws.com/me.jpeg" height="280" width="280">
 My Space!!!
 <a th:href="@{/strings/calculators/length}">String Calculator</a>
-<a th:href="@{/admin}">Administrator</a>
-<a th:href="@{/users/sign-up}">Sign Up</a>
-<a th:href="@{/users/my-page}">My Page</a>
-<a th:href="@{/logout}">Sign Out</a>
+<li sec:authorize="hasRole('ADMIN')"><a th:href="@{/admin}">Administrator</a></li>
+<li sec:authorize="isAnonymous()"><a th:href="@{/users/sign-up}">Sign Up</a></li>
+<li sec:authorize="isAnonymous()"><a th:href="@{/users/sign-in}">Sign In</a></li>
+<li sec:authorize="isAuthenticated()"><a th:href="@{/users/my-page}">My Page</a></li>
+<li sec:authorize="isAuthenticated()"><a th:href="@{/users/sign-out}">Sign Out</a></li>
 </body>
 </html>
