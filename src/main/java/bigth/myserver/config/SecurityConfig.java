@@ -42,9 +42,8 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests()
                 .requestMatchers("/").permitAll()
-                .requestMatchers("/string-calculator/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/users/sign-up").permitAll()
-                .requestMatchers(HttpMethod.POST, "/users/sign-up").permitAll()
+                .requestMatchers("/strings/**").permitAll()
+                .requestMatchers("/users/sign-up").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
