@@ -18,7 +18,13 @@ public class Role extends BaseTimes {
     @Column(nullable = false, length = 16)
     private Type name;
 
+    @Getter
     public enum Type {
-        ROLE_USER, ROLE_ADMIN
+        ROLE_USER("USER"), ROLE_ADMIN("ADMIN");
+
+        private final String role;
+        Type(String role) {
+            this.role = role;
+        }
     }
 }
