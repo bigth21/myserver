@@ -1,4 +1,4 @@
-package bigth.myserver.service;
+package bigth.myserver.config;
 
 import bigth.myserver.domain.UserRepository;
 import bigth.myserver.domain.UserRoleRepository;
@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 @RequiredArgsConstructor
 public class SimpleUserDetailsService implements UserDetailsService {
 

@@ -1,28 +1,18 @@
 package bigth.myserver.config;
 
-import bigth.myserver.domain.Role;
 import bigth.myserver.domain.UserRepository;
 import bigth.myserver.domain.UserRoleRepository;
-import bigth.myserver.service.SimpleUserDetailsService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-
-import java.io.IOException;
 
 import static bigth.myserver.domain.Role.Type.ROLE_ADMIN;
 
@@ -44,6 +34,11 @@ public class SecurityConfig {
         return new SimpleUserDetailsService(userRepository, userRoleRepository);
     }
 
+    @Bean
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        return new SimpleAuthenticationProvider(userDetailsService, passwordEncoder);
+    }
+
     @Order(2)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -56,15 +51,13 @@ public class SecurityConfig {
 
                 .and()
                 .formLogin()
-
+                .and()
+                .rememberMe()
                 .and()
                 .logout()
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.sendRedirect("/");
                 })
-
-                .and()
-                .rememberMe()
 
                 .and()
                 .build();
