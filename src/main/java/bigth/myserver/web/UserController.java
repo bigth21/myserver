@@ -22,7 +22,12 @@ public class UserController {
     public String signUp(@RequestParam String username,
                          @RequestParam String password,
                          @RequestParam String email) {
-        var user = userService.createUser(username, password, email);
-        return "index";
+        userService.createUser(username, password, email);
+        return "redirect:/login";
+    }
+
+    @GetMapping("/my-page")
+    public String myPage() {
+        return "users/my-page";
     }
 }

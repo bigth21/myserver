@@ -4,6 +4,9 @@ import bigth.myserver.domain.Role;
 import bigth.myserver.domain.UserRepository;
 import bigth.myserver.domain.UserRoleRepository;
 import bigth.myserver.service.SimpleUserDetailsService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,10 +14,15 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import java.io.IOException;
 
 import static bigth.myserver.domain.Role.Type.ROLE_ADMIN;
 
@@ -48,6 +56,12 @@ public class SecurityConfig {
 
                 .and()
                 .formLogin()
+
+                .and()
+                .logout()
+                .logoutSuccessHandler((request, response, authentication) -> {
+                    response.sendRedirect("/");
+                })
 
                 .and()
                 .rememberMe()
