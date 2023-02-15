@@ -2,10 +2,12 @@ package bigth.myserver.config.security;
 
 import bigth.myserver.domain.UserRepository;
 import bigth.myserver.domain.UserRoleRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import static bigth.myserver.domain.Role.Type.ROLE_ADMIN;
 
@@ -54,6 +57,7 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/users/sign-in")
                 .loginProcessingUrl("/login-proc")
+                .authenticationDetailsSource((AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails>) SimpleWebAuthenticationDetails::new)
                 .defaultSuccessUrl("/")
                 .and()
                 .rememberMe()
@@ -79,6 +83,7 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/users/sign-in")
                 .loginProcessingUrl("/login-proc")
+                .authenticationDetailsSource((AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails>) SimpleWebAuthenticationDetails::new)
                 .defaultSuccessUrl("/")
                 .and()
                 .rememberMe()

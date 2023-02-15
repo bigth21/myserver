@@ -9,9 +9,13 @@
 </head>
 <body>
 <form th:method="post" th:action="@{/login-proc}">
-  <input type="text" name="username" placeholder="username" required="required" autofocus="autofocus">
-  <input type="password" name="password" placeholder="password" required="required">
-  <button type="submit">Sign In</button>
+    <input th:type="hidden" th:value="secret" name="secretKey">
+    <input type="text" name="username" placeholder="username" required="required" autofocus="autofocus">
+    <input type="password" name="password" placeholder="password" required="required">
+    <button type="submit">Sign In</button>
+    <div th:if="${param.exception}">
+        <span th:text="${exception}"></span>
+    </div>
 </form>
 
 </body>

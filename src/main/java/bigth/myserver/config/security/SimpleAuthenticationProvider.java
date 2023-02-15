@@ -3,6 +3,7 @@ package bigth.myserver.config.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -22,6 +23,10 @@ public class SimpleAuthenticationProvider implements AuthenticationProvider {
         var userDetails = userDetailsService.loadUserByUsername(username);
         if (!passwordEncoder.matches(credentials, userDetails.getPassword())) {
             throw new BadCredentialsException("Password transmitted is wrong");
+        }
+        var details = (SimpleWebAuthenticationDetails) authentication.getDetails();
+        if (!details.getSecretKey().equals("secret")) {
+            throw new InsufficientAuthenticationException("Secret parameter is mismatch");
         }
         return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), null, userDetails.getAuthorities());
     }
