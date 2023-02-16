@@ -15,16 +15,15 @@ import java.io.IOException;
 public class SimpleAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final RequestCache requestCache = new HttpSessionRequestCache();
-    private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         var savedRequest = requestCache.getRequest(request, response);
         if (savedRequest != null) {
             var redirectUrl = savedRequest.getRedirectUrl();
-            redirectStrategy.sendRedirect(request, response, redirectUrl);
+            super.getRedirectStrategy().sendRedirect(request, response, redirectUrl);
         } else {
-            redirectStrategy.sendRedirect(request, response, getDefaultTargetUrl());
+            super.getRedirectStrategy().sendRedirect(request, response, super.getDefaultTargetUrl());
         }
     }
 }
