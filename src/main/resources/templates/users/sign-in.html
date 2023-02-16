@@ -13,8 +13,8 @@
     <input type="text" name="username" placeholder="username" required="required" autofocus="autofocus">
     <input type="password" name="password" placeholder="password" required="required">
     <button type="submit">Sign In</button>
-    <div th:if="${param.exception}">
-        <span th:text="${exception}"></span>
+    <div th:if="${param.isException}">
+        <span th:text="${message}"></span>
     </div>
 </form>
 

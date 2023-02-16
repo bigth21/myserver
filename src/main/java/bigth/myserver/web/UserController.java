@@ -38,12 +38,14 @@ public class UserController {
     }
 
     @GetMapping("/sign-in")
-    public String signIn(@RequestParam(name = "SPRING_SECURITY_LAST_EXCEPTION", required = false) Exception exception,
+    public String signIn(@RequestParam(required = false) Boolean isException,
+                         @RequestParam(required = false) String message,
                          Model model) {
-        if (exception != null) {
-            System.out.println(exception.getMessage());
-            model.addAttribute("exception", exception);
-            model.addAttribute("message", exception.getMessage());
+        System.out.println(isException);
+        System.out.println(message);
+        if (isException != null && isException) {
+            model.addAttribute("isException", isException);
+            model.addAttribute("message", message);
         }
         return "users/sign-in";
     }

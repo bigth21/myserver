@@ -23,7 +23,7 @@ public class SimpleUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         var user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("User not exist"));
+                .orElseThrow(() -> new UsernameNotFoundException("User not exist"));
         List<GrantedAuthority> authorities = userRoleRepository.findAuthorities(user).stream()
                 .map(ur -> new SimpleGrantedAuthority(ur.getRole().getName().name()))
                 .collect(Collectors.toList());
