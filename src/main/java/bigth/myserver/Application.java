@@ -48,27 +48,39 @@ public class Application {
         @Override
         public void run(ApplicationArguments args) {
             log.info("Data initialization starts");
-            var member = User.builder()
+            var userRole = Role.builder()
+                    .name(ROLE_USER)
+                    .build();
+            var adminRole = Role.builder()
+                    .name(ROLE_ADMIN)
+                    .build();
+
+            var adminUser = User.builder()
                     .username(adminUsername)
                     .password(passwordEncoder.encode(adminPassword))
                     .email(adminEmail)
                     .build();
-            userRepository.save(member);
-            List<Role> roles = new ArrayList<>();
-            roles.add(Role.builder()
-                    .name(ROLE_USER)
-                    .build());
-            roles.add(Role.builder()
-                    .name(ROLE_ADMIN)
-                    .build());
-            roleRepository.saveAll(roles);
-            var memberRoles = roles.stream()
+            userRepository.save(adminUser);
+            List<Role> adminRoles = List.of(userRole, adminRole);
+            roleRepository.saveAll(adminRoles);
+            var adminUserRoles = adminRoles.stream()
                     .map(r -> UserRole.builder()
                             .role(r)
-                            .user(member)
+                            .user(adminUser)
                             .build())
                     .collect(Collectors.toList());
-            userRoleRepository.saveAll(memberRoles);
+            userRoleRepository.saveAll(adminUserRoles);
+
+            var user = User.builder()
+                    .username("user")
+                    .password(passwordEncoder.encode("1234"))
+                    .email("user@email.com")
+                    .build();
+            userRepository.save(user);
+            userRoleRepository.save(UserRole.builder()
+                    .role(userRole)
+                    .user(user)
+                    .build());
             log.info("Data initialization ends");
         }
     }
