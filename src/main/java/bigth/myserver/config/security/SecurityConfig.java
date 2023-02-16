@@ -69,6 +69,10 @@ public class SecurityConfig {
                 })
 
                 .and()
+                .exceptionHandling()
+                .accessDeniedHandler(new SimpleAccessDeniedHandler())
+
+                .and()
                 .build();
     }
 
@@ -94,6 +98,10 @@ public class SecurityConfig {
                 .logoutSuccessHandler((request, response, authentication) -> {
                     response.sendRedirect("/");
                 })
+
+                .and()
+                .exceptionHandling()
+                .accessDeniedHandler(new SimpleAccessDeniedHandler())
 
                 .and()
                 .build();

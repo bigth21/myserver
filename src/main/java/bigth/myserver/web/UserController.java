@@ -50,6 +50,15 @@ public class UserController {
         return "users/sign-in";
     }
 
+    @GetMapping("/denied")
+    public String accessDenied(@RequestParam(required = false) String message, Model model) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var username = (String) authentication.getPrincipal();
+        model.addAttribute("username", username);
+        model.addAttribute("message", message);
+        return "users/denied";
+    }
+
     @GetMapping("/sign-out")
     public String signOut(HttpServletRequest request, HttpServletResponse response) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
