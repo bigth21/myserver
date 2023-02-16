@@ -2,6 +2,7 @@ package bigth.myserver.config.security;
 
 import bigth.myserver.domain.UserRepository;
 import bigth.myserver.domain.UserRoleRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import static bigth.myserver.domain.Role.Type.ROLE_ADMIN;
@@ -26,6 +28,7 @@ public class SecurityConfig {
 
     private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
+    private final ObjectMapper objectMapper;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -51,6 +54,9 @@ public class SecurityConfig {
                 .requestMatchers("/strings/**").permitAll()
                 .requestMatchers("/users/sign-up").permitAll()
                 .requestMatchers("/users/sign-in*").permitAll()
+
+                .requestMatchers("/api/v1/sign-in").permitAll()
+
                 .anyRequest().authenticated()
 
                 .and()
@@ -73,6 +79,8 @@ public class SecurityConfig {
                 .accessDeniedHandler(new SimpleAccessDeniedHandler())
 
                 .and()
+                .addFilterBefore(new ApiAuthenticationProcessingFilter(objectMapper), UsernamePasswordAuthenticationFilter.class)
+
                 .build();
     }
 
