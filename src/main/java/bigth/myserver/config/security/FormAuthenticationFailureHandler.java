@@ -8,7 +8,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 
 import java.io.IOException;
 
-public class SimpleAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+public class FormAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {

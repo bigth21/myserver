@@ -7,13 +7,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -24,13 +23,15 @@ public class ApiAuthenticationProcessingFilter extends AbstractAuthenticationPro
 
     private final ObjectMapper objectMapper;
 
-    public ApiAuthenticationProcessingFilter(ObjectMapper objectMapper) {
+    public ApiAuthenticationProcessingFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager) {
         super(new AntPathRequestMatcher("/api/v1/sign-in"));
         this.objectMapper = objectMapper;
+        setAuthenticationManager(authenticationManager);
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+        System.out.println("hihi");
         var requestDTO = objectMapper.readValue(request.getReader(), UserSignInRequestDTO.class);
         if (!hasText(requestDTO.getUsername()) || !hasText(requestDTO.getPassword())) {
             log.error("Username or password is not valid");

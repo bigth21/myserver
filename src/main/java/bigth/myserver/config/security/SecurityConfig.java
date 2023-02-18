@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -42,12 +44,23 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        return new SimpleAuthenticationProvider(userDetailsService, passwordEncoder);
+        return new FormAuthenticationProvider(userDetailsService, passwordEncoder);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManagerBean(AuthenticationProvider provider) {
+        return new ProviderManager(provider);
+    }
+
+    @Bean
+    public AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource() {
+        return new FormAuthenticationDetailsSource();
     }
 
     @Order(2)
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager,
+                                                   AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource) throws Exception {
         return http
                 .authorizeHttpRequests()
                 .requestMatchers("/").permitAll()
@@ -63,9 +76,9 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/users/sign-in")
                 .loginProcessingUrl("/login-proc")
-                .authenticationDetailsSource((AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails>) SimpleWebAuthenticationDetails::new)
-                .successHandler(new SimpleAuthenticationSuccessHandler())
-                .failureHandler(new SimpleAuthenticationFailureHandler())
+                .authenticationDetailsSource(authenticationDetailsSource)
+                .successHandler(new FormAuthenticationSuccessHandler())
+                .failureHandler(new FormAuthenticationFailureHandler())
                 .and()
                 .rememberMe()
                 .and()
@@ -79,7 +92,8 @@ public class SecurityConfig {
                 .accessDeniedHandler(new SimpleAccessDeniedHandler())
 
                 .and()
-                .addFilterBefore(new ApiAuthenticationProcessingFilter(objectMapper), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new ApiAuthenticationProcessingFilter(objectMapper, authenticationManager), UsernamePasswordAuthenticationFilter.class)
+                .csrf().disable()
 
                 .build();
     }
@@ -97,8 +111,8 @@ public class SecurityConfig {
                 .loginPage("/users/sign-in")
                 .loginProcessingUrl("/login-proc")
                 .authenticationDetailsSource((AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails>) SimpleWebAuthenticationDetails::new)
-                .successHandler(new SimpleAuthenticationSuccessHandler())
-                .failureHandler(new SimpleAuthenticationFailureHandler())
+                .successHandler(new FormAuthenticationSuccessHandler())
+                .failureHandler(new FormAuthenticationFailureHandler())
                 .and()
                 .rememberMe()
                 .and()
