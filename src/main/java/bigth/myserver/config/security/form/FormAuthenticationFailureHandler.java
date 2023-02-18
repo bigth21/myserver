@@ -1,4 +1,4 @@
-package bigth.myserver.config.security;
+package bigth.myserver.config.security.form;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

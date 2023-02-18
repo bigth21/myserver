@@ -1,4 +1,4 @@
-package bigth.myserver.config.security;
+package bigth.myserver.config.security.form;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
@@ -8,6 +8,6 @@ public class FormAuthenticationDetailsSource implements AuthenticationDetailsSou
 
     @Override
     public WebAuthenticationDetails buildDetails(HttpServletRequest context) {
-        return new SimpleWebAuthenticationDetails(context);
+        return new FormWebAuthenticationDetails(context);
     }
 }

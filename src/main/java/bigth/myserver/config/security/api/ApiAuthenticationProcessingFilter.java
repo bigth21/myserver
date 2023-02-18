@@ -1,4 +1,4 @@
-package bigth.myserver.config.security;
+package bigth.myserver.config.security.api;
 
 import bigth.myserver.web.UserSignInRequestDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +31,6 @@ public class ApiAuthenticationProcessingFilter extends AbstractAuthenticationPro
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
-        System.out.println("hihi");
         var requestDTO = objectMapper.readValue(request.getReader(), UserSignInRequestDTO.class);
         if (!hasText(requestDTO.getUsername()) || !hasText(requestDTO.getPassword())) {
             log.error("Username or password is not valid");

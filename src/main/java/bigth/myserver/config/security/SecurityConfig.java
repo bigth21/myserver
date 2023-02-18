@@ -1,5 +1,8 @@
 package bigth.myserver.config.security;
 
+import bigth.myserver.config.security.api.ApiAuthenticationProcessingFilter;
+import bigth.myserver.config.security.api.ApiAuthenticationProvider;
+import bigth.myserver.config.security.form.*;
 import bigth.myserver.domain.UserRepository;
 import bigth.myserver.domain.UserRoleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -39,17 +43,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new SimpleUserDetailsService(userRepository, userRoleRepository);
-    }
-
-    @Bean
-    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
-        return new FormAuthenticationProvider(userDetailsService, passwordEncoder);
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManagerBean(AuthenticationProvider provider) {
-        return new ProviderManager(provider);
+        return new CustomUserDetailsService(userRepository, userRoleRepository);
     }
 
     @Bean
@@ -57,19 +51,24 @@ public class SecurityConfig {
         return new FormAuthenticationDetailsSource();
     }
 
+    @Bean
+    public FormAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        return new FormAuthenticationProvider(userDetailsService, passwordEncoder);
+    }
+
     @Order(2)
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager,
-                                                   AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource) throws Exception {
+    public SecurityFilterChain formSecurityFilterChain(HttpSecurity http,
+                                                       AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource,
+                                                       FormAuthenticationProvider authenticationProvider) throws Exception {
         return http
+                .securityMatcher("/**")
                 .authorizeHttpRequests()
                 .requestMatchers("/").permitAll()
                 .requestMatchers("/strings/**").permitAll()
                 .requestMatchers("/users/sign-up").permitAll()
                 .requestMatchers("/users/sign-in*").permitAll()
-
-                .requestMatchers("/api/v1/sign-in").permitAll()
-
+                .requestMatchers(("/admin/**")).hasRole(ROLE_ADMIN.getRole())
                 .anyRequest().authenticated()
 
                 .and()
@@ -88,44 +87,36 @@ public class SecurityConfig {
                 })
 
                 .and()
+                .authenticationProvider(authenticationProvider)
                 .exceptionHandling()
-                .accessDeniedHandler(new SimpleAccessDeniedHandler())
+                .accessDeniedHandler(new FormAccessDeniedHandler())
+
+                .and().build();
+    }
+
+    @Bean
+    ApiAuthenticationProvider apiAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        return new ApiAuthenticationProvider(userDetailsService, passwordEncoder);
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(ApiAuthenticationProvider provider) {
+        return new ProviderManager(provider);
+    }
+
+    @Order(1)
+    @Bean
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+        return http
+                .securityMatcher("/api/**")
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.POST, "/v1/sign-in").permitAll()
+                .anyRequest().authenticated()
 
                 .and()
                 .addFilterBefore(new ApiAuthenticationProcessingFilter(objectMapper, authenticationManager), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
 
-                .build();
-    }
-
-    @Order(1)
-    @Bean
-    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
-        return http
-                .securityMatcher("/admin")
-                .authorizeHttpRequests()
-                .anyRequest().hasRole(ROLE_ADMIN.getRole())
-
-                .and()
-                .formLogin()
-                .loginPage("/users/sign-in")
-                .loginProcessingUrl("/login-proc")
-                .authenticationDetailsSource((AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails>) SimpleWebAuthenticationDetails::new)
-                .successHandler(new FormAuthenticationSuccessHandler())
-                .failureHandler(new FormAuthenticationFailureHandler())
-                .and()
-                .rememberMe()
-                .and()
-                .logout()
-                .logoutSuccessHandler((request, response, authentication) -> {
-                    response.sendRedirect("/");
-                })
-
-                .and()
-                .exceptionHandling()
-                .accessDeniedHandler(new SimpleAccessDeniedHandler())
-
-                .and()
                 .build();
     }
 
