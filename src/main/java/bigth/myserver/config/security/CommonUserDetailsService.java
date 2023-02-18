@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 @RequiredArgsConstructor
-public class CustomUserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+public class CommonUserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
