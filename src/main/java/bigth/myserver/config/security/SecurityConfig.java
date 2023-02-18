@@ -110,7 +110,7 @@ public class SecurityConfig {
         return http
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/v1/sign-in").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/sign-in").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
