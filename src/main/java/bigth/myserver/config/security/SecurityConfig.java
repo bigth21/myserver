@@ -101,7 +101,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http, ApiAuthenticationProvider authenticationProvider) throws Exception {
+    public AuthenticationManager authenticationManager(HttpSecurity http, ApiAuthenticationProvider authenticationProvider) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(authenticationProvider);
         return authenticationManagerBuilder.build();
@@ -120,7 +120,7 @@ public class SecurityConfig {
     public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http,
                                                       ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
         return http
-                .csrf().disable()
+//                .csrf().disable()
 
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests()
