@@ -9,7 +9,7 @@
 </head>
 <body>
 <label for="name">String Length Calculator</label>
-<form class="string-calculator" th:action="@{/string-calculator/calculate}">
+<form class="string-calculator" th:method="post" th:action="@{/strings/calculators/length}">
     <input type="text" id="name" name="str" required maxlength="255"
            th:placeholder="${str} ? _ :'String to be calculated'"
            th:value = "${str}">
