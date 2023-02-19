@@ -6,8 +6,15 @@ spring:
     password: password
   jpa:
     open-in-view: false
+    hibernate:
+      ddl-auto: create
 
   security:
     user:
       name: ENC(PzxhyS2jnzUTGLFlLktsr39y0i0k1k5v)
       password: ENC(YZyVBZaMn2WHAh75ZmSEeFqnaXGidmGl)
+
+logging:
+  level:
+    org.springframework.transaction: trace
+    org.springframework.security: trace

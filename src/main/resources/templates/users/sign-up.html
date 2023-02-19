@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+<form class="string-calculator" th:method="post" th:action="@{/users/sign-up}">
+    <input type="text" id="username" name="username" required maxlength="20"
+           th:placeholder="${username} ? _ :'username'"
+           th:value="${username}"> <br>
+    <input type="password" id="password" name="password" required maxlength="30"
+           th:placeholder="${password} ? _ :'password'"
+           th:value="${password}"> <br>
+    <input type="email" id="email" name="email" required maxlength="50"
+           th:placeholder="${email} ? _ :'email'"
+           th:value="${email}"> <br>
+    <button type="submit">Sign Up</button>
+</form>
+</body>
+</html>

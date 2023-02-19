@@ -1,6 +1,6 @@
 package bigth.myserver;
 
-import bigth.myserver.config.encdec.KMS;
+import bigth.myserver.config.encryption.KMS;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
