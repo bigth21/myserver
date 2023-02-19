@@ -19,7 +19,6 @@ public class ApiAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        System.out.println("apiauthp");
         var username = authentication.getName();
         var credentials = (String) authentication.getCredentials();
         var userDetails = userDetailsService.loadUserByUsername(username);

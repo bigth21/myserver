@@ -18,7 +18,6 @@ public class FormAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        System.out.println("formauthp");
         var username = authentication.getName();
         var credentials = (String) authentication.getCredentials();
         var userDetails = userDetailsService.loadUserByUsername(username);

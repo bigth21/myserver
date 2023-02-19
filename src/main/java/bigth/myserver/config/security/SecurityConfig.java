@@ -1,12 +1,12 @@
 package bigth.myserver.config.security;
 
-import bigth.myserver.config.security.api.ApiAuthenticationProcessingFilter;
-import bigth.myserver.config.security.api.ApiAuthenticationProvider;
+import bigth.myserver.config.security.api.*;
 import bigth.myserver.config.security.form.*;
 import bigth.myserver.domain.UserRepository;
 import bigth.myserver.domain.UserRoleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,14 +15,22 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.session.SessionAuthenticationException;
+import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import static bigth.myserver.domain.Role.Type.ROLE_ADMIN;
 
@@ -46,11 +54,6 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource() {
-        return new FormAuthenticationDetailsSource();
-    }
-
-    @Bean
     public FormAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         return new FormAuthenticationProvider(userDetailsService, passwordEncoder);
     }
@@ -58,7 +61,6 @@ public class SecurityConfig {
     @Order(2)
     @Bean
     public SecurityFilterChain formSecurityFilterChain(HttpSecurity http,
-                                                       AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource,
                                                        FormAuthenticationProvider authenticationProvider) throws Exception {
         return http
                 .securityMatcher("/**")
@@ -74,7 +76,7 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/users/sign-in")
                 .loginProcessingUrl("/login-proc")
-                .authenticationDetailsSource(authenticationDetailsSource)
+                .authenticationDetailsSource(new FormAuthenticationDetailsSource())
                 .successHandler(new FormAuthenticationSuccessHandler())
                 .failureHandler(new FormAuthenticationFailureHandler())
                 .and()
@@ -99,23 +101,41 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(ApiAuthenticationProvider provider) {
+    public AuthenticationManager authenticationManager(ApiAuthenticationProvider provider) throws Exception {
         return new ProviderManager(provider);
+    }
+
+    @Bean
+    ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter(AuthenticationManager authenticationManager) {
+        var apiAuthenticationProcessingFilter = new ApiAuthenticationProcessingFilter(objectMapper, authenticationManager);
+        apiAuthenticationProcessingFilter.setAuthenticationSuccessHandler(new ApiAuthenticationSuccessHandler(objectMapper));
+        apiAuthenticationProcessingFilter.setAuthenticationFailureHandler(new ApiAuthenticationFailureHandler(objectMapper));
+        return apiAuthenticationProcessingFilter;
     }
 
     @Order(1)
     @Bean
-    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http,
+                                                      ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
         return http
+                .csrf().disable()
+
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/v1/sign-in").permitAll()
+                .requestMatchers(HttpMethod.POST, "/v1/messages").authenticated()
+                .requestMatchers(HttpMethod.POST, "/v1/admin").hasRole(ROLE_ADMIN.getRole())
                 .anyRequest().authenticated()
 
                 .and()
-                .addFilterBefore(new ApiAuthenticationProcessingFilter(objectMapper, authenticationManager), UsernamePasswordAuthenticationFilter.class)
-                .csrf().disable()
+                .addFilterBefore(apiAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class)
+                .authenticationManager()
 
+                .exceptionHandling()
+                .authenticationEntryPoint(new ApiAuthenticationEntryPoint())
+                .accessDeniedHandler(new ApiAccessDeniedHandler())
+
+                .and()
                 .build();
     }
 
