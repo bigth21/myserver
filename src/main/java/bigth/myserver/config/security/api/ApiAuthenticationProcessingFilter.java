@@ -14,9 +14,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.session.ChangeSessionIdAuthenticationStrategy;
+import org.springframework.security.web.authentication.session.CompositeSessionAuthenticationStrategy;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.springframework.util.StringUtils.hasText;
 
@@ -30,6 +36,8 @@ public class ApiAuthenticationProcessingFilter extends AbstractAuthenticationPro
         super(new AntPathRequestMatcher("/api/v1/sign-in"), authenticationManager);
         this.objectMapper = objectMapper;
         setAuthenticationDetailsSource(authenticationDetailsSource);
+        setSessionAuthenticationStrategy(new CompositeSessionAuthenticationStrategy(List.of(new ChangeSessionIdAuthenticationStrategy())));
+        setSecurityContextRepository(new DelegatingSecurityContextRepository(List.of(new HttpSessionSecurityContextRepository(), new RequestAttributeSecurityContextRepository())));
     }
 
     @Override

@@ -125,9 +125,9 @@ public class SecurityConfig {
 
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, "/v1/sign-in").permitAll()
-                .requestMatchers(HttpMethod.POST, "/v1/messages").authenticated()
-                .requestMatchers(HttpMethod.POST, "/v1/admin").hasRole(ROLE_ADMIN.getRole())
+                .requestMatchers(HttpMethod.POST, "/api/v1/sign-in").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/messages").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/admin").hasRole(ROLE_ADMIN.getRole())
                 .anyRequest().authenticated()
 
                 .and()
