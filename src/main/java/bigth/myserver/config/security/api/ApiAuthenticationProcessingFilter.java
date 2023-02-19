@@ -7,11 +7,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationDetailsSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
@@ -23,10 +25,11 @@ public class ApiAuthenticationProcessingFilter extends AbstractAuthenticationPro
 
     private final ObjectMapper objectMapper;
 
-    public ApiAuthenticationProcessingFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager) {
-        super(new AntPathRequestMatcher("/api/v1/sign-in"));
+    public ApiAuthenticationProcessingFilter(ObjectMapper objectMapper, AuthenticationManager authenticationManager,
+                                             AuthenticationDetailsSource<HttpServletRequest, WebAuthenticationDetails> authenticationDetailsSource) {
+        super(new AntPathRequestMatcher("/api/v1/sign-in"), authenticationManager);
         this.objectMapper = objectMapper;
-        setAuthenticationManager(authenticationManager);
+        setAuthenticationDetailsSource(authenticationDetailsSource);
     }
 
     @Override
@@ -38,6 +41,11 @@ public class ApiAuthenticationProcessingFilter extends AbstractAuthenticationPro
             return null;
         }
         var authentication = new UsernamePasswordAuthenticationToken(requestDTO.getUsername(), requestDTO.getPassword());
+        setDetails(request, authentication);
         return getAuthenticationManager().authenticate(authentication);
+    }
+
+    protected void setDetails(HttpServletRequest request, UsernamePasswordAuthenticationToken authentication) {
+        authentication.setDetails(this.authenticationDetailsSource.buildDetails(request));
     }
 }

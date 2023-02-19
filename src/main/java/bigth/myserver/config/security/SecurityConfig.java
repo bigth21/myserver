@@ -101,13 +101,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(ApiAuthenticationProvider provider) throws Exception {
-        return new ProviderManager(provider);
+    public AuthenticationManager authManager(HttpSecurity http, ApiAuthenticationProvider authenticationProvider) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder =
+                http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder.authenticationProvider(authenticationProvider);
+        return authenticationManagerBuilder.build();
     }
 
     @Bean
     ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter(AuthenticationManager authenticationManager) {
-        var apiAuthenticationProcessingFilter = new ApiAuthenticationProcessingFilter(objectMapper, authenticationManager);
+        var apiAuthenticationProcessingFilter = new ApiAuthenticationProcessingFilter(objectMapper, authenticationManager, new ApiAuthenticationDetailsSource());
         apiAuthenticationProcessingFilter.setAuthenticationSuccessHandler(new ApiAuthenticationSuccessHandler(objectMapper));
         apiAuthenticationProcessingFilter.setAuthenticationFailureHandler(new ApiAuthenticationFailureHandler(objectMapper));
         return apiAuthenticationProcessingFilter;
@@ -129,7 +132,6 @@ public class SecurityConfig {
 
                 .and()
                 .addFilterBefore(apiAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class)
-                .authenticationManager()
 
                 .exceptionHandling()
                 .authenticationEntryPoint(new ApiAuthenticationEntryPoint())
