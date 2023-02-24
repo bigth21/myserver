@@ -8,6 +8,10 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+#        show_sql: true
 
   security:
     user:
@@ -16,5 +20,12 @@ spring:
 
 logging:
   level:
-    org.springframework.transaction: trace
-    org.springframework.security: trace
+    org:
+      springframework:
+        transaction: trace
+        security: trace
+      hibernate:
+        orm.jdbc.bind: trace
+        SQL: debug
+#        type: trace
+#        stat: debug
