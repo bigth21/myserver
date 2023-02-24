@@ -44,23 +44,23 @@ public class SecurityConfig {
     private final ObjectMapper objectMapper;
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    UserDetailsService userDetailsService() {
         return new CommonUserDetailsService(userRepository, userRoleRepository);
     }
 
     @Bean
-    public FormAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    FormAuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         return new FormAuthenticationProvider(userDetailsService, passwordEncoder);
     }
 
     @Order(2)
     @Bean
-    public SecurityFilterChain formSecurityFilterChain(HttpSecurity http,
+    SecurityFilterChain formSecurityFilterChain(HttpSecurity http,
                                                        FormAuthenticationProvider authenticationProvider) throws Exception {
         return http
                 .securityMatcher("/**")
@@ -101,7 +101,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http, ApiAuthenticationProvider authenticationProvider) throws Exception {
+    AuthenticationManager authenticationManager(HttpSecurity http, ApiAuthenticationProvider authenticationProvider) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.authenticationProvider(authenticationProvider);
         return authenticationManagerBuilder.build();
@@ -117,7 +117,7 @@ public class SecurityConfig {
 
     @Order(1)
     @Bean
-    public SecurityFilterChain apiSecurityFilterChain(HttpSecurity http,
+    SecurityFilterChain apiSecurityFilterChain(HttpSecurity http,
                                                       ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
         return http
 //                .csrf().disable()
