@@ -13,7 +13,7 @@ public class JasyptConfig {
     private final String ALGORITHM = "PBEWithMD5AndDES";
 
     @Bean("jasyptStringEncryptor")
-    public StringEncryptor stringEncryptor() {
+    StringEncryptor stringEncryptor() {
         var encryptor = new PooledPBEStringEncryptor();
         var config = new SimpleStringPBEConfig();
         config.setPassword(KMS.decrypt(ENCRYPTED_KEY));

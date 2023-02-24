@@ -1,4 +1,4 @@
-package bigth.myserver;
+package bigth.myserver.config.encryption;
 
 import bigth.myserver.config.encryption.JasyptConfig;
 import lombok.extern.slf4j.Slf4j;
