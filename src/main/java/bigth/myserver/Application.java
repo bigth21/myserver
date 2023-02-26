@@ -28,7 +28,7 @@ public class Application {
     }
 
     @Profile("local")
-    @Component
+//    @Component
     @RequiredArgsConstructor
     @Slf4j
     @Transactional
