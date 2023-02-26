@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(name = "UNQ_UserRole_UserRole", columnNames = {"userId", "roleId"}))
+@Table(uniqueConstraints = @UniqueConstraint(name = "UNQ_UserRole_UserIdRoleId", columnNames = {"userId", "roleId"}))
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
