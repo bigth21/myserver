@@ -108,13 +108,13 @@ public class SecurityConfig {
     SecurityFilterChain apiSecurityFilterChain(HttpSecurity http,
                                                       ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
         return http
-//                .csrf().disable()
+                .csrf().disable()
 
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/api/v1/sign-in").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/messages").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/admin").hasRole(ROLE_ADMIN.getRole())
+                .requestMatchers(HttpMethod.GET, "/api/v1/messages").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/admin").hasRole(ROLE_ADMIN.getRole())
                 .anyRequest().authenticated()
 
                 .and()
