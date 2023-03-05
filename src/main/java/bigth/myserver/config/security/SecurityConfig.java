@@ -46,10 +46,10 @@ public class SecurityConfig {
         return new FormAuthenticationProvider(userDetailsService, passwordEncoder);
     }
 
-    @Order(2)
+    @Order(3)
     @Bean
     SecurityFilterChain formSecurityFilterChain(HttpSecurity http,
-                                                       FormAuthenticationProvider authenticationProvider) throws Exception {
+                                                FormAuthenticationProvider authenticationProvider) throws Exception {
         return http
                 .securityMatcher("/**")
                 .authorizeHttpRequests()
@@ -103,10 +103,33 @@ public class SecurityConfig {
         return apiAuthenticationProcessingFilter;
     }
 
+    @Order(2)
+    @Bean
+    SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http,
+                                                    ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
+        return http
+                .csrf().disable()
+
+                .securityMatcher("/actuator/**")
+                .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+                .anyRequest().authenticated()
+
+                .and()
+                .addFilterBefore(apiAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class)
+
+                .exceptionHandling()
+                .authenticationEntryPoint(new ApiAuthenticationEntryPoint())
+                .accessDeniedHandler(new ApiAccessDeniedHandler())
+
+                .and()
+                .build();
+    }
+
     @Order(1)
     @Bean
     SecurityFilterChain apiSecurityFilterChain(HttpSecurity http,
-                                                      ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
+                                               ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
         return http
                 .csrf().disable()
 
