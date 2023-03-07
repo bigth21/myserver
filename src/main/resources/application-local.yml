@@ -23,6 +23,21 @@ spring:
       name: ENC(PzxhyS2jnzUTGLFlLktsr39y0i0k1k5v)
       password: ENC(YZyVBZaMn2WHAh75ZmSEeFqnaXGidmGl)
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+#      show-components: always
+      show-details: always
+  info:
+    java:
+      enabled: true
+    os:
+      enabled: true
+
 logging:
   level:
     org:
