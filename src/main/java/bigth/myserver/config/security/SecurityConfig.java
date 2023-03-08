@@ -46,7 +46,7 @@ public class SecurityConfig {
         return new FormAuthenticationProvider(userDetailsService, passwordEncoder);
     }
 
-    @Order(3)
+    @Order(2)
     @Bean
     SecurityFilterChain formSecurityFilterChain(HttpSecurity http,
                                                 FormAuthenticationProvider authenticationProvider) throws Exception {
@@ -57,7 +57,8 @@ public class SecurityConfig {
                 .requestMatchers("/strings/**").permitAll()
                 .requestMatchers("/users/sign-up").permitAll()
                 .requestMatchers("/users/sign-in*").permitAll()
-                .requestMatchers(("/admin/**")).hasRole(ROLE_ADMIN.getRole())
+                .requestMatchers("/admin/**").hasRole(ROLE_ADMIN.getRole())
+                .requestMatchers("/actuator/**").hasRole(ROLE_ADMIN.getRole())
                 .anyRequest().authenticated()
 
                 .and()
@@ -101,29 +102,6 @@ public class SecurityConfig {
         apiAuthenticationProcessingFilter.setAuthenticationSuccessHandler(new ApiAuthenticationSuccessHandler(objectMapper));
         apiAuthenticationProcessingFilter.setAuthenticationFailureHandler(new ApiAuthenticationFailureHandler(objectMapper));
         return apiAuthenticationProcessingFilter;
-    }
-
-    @Order(2)
-    @Bean
-    SecurityFilterChain actuatorSecurityFilterChain(HttpSecurity http,
-                                                    ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
-        return http
-                .csrf().disable()
-
-                .securityMatcher("/actuator/**")
-                .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-                .anyRequest().authenticated()
-
-                .and()
-                .addFilterBefore(apiAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class)
-
-                .exceptionHandling()
-                .authenticationEntryPoint(new ApiAuthenticationEntryPoint())
-                .accessDeniedHandler(new ApiAccessDeniedHandler())
-
-                .and()
-                .build();
     }
 
     @Order(1)
