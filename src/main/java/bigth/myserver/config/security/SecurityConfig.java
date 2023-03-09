@@ -58,7 +58,8 @@ public class SecurityConfig {
                 .requestMatchers("/users/sign-up").permitAll()
                 .requestMatchers("/users/sign-in*").permitAll()
                 .requestMatchers("/admin/**").hasRole(ROLE_ADMIN.getRole())
-                .requestMatchers("/actuator/**").hasRole(ROLE_ADMIN.getRole())
+                .requestMatchers("/actuator/**").permitAll()
+//                .requestMatchers("/actuator/**").hasRole(ROLE_ADMIN.getRole())
                 .anyRequest().authenticated()
 
                 .and()
