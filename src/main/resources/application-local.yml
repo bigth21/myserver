@@ -39,7 +39,7 @@ management:
     os:
       enabled: true
   server:
-    port: 8081 # Do not expose post to external
+    port: 8081 # Do not expose post to external or Need authorization setting in API gateway
 server:
   tomcat:
     mbeanregistry:
