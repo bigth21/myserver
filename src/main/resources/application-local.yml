@@ -38,6 +38,8 @@ management:
       enabled: true
     os:
       enabled: true
+  server:
+    port: 8081 # Do not expose post to external
 server:
   tomcat:
     mbeanregistry:

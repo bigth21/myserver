@@ -11,6 +11,8 @@ services:
     ports:
       - 9090:9090
     restart: unless-stopped
+    networks:
+      - monitoring_net
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
@@ -26,3 +28,9 @@ services:
     depends_on:
       - prometheus
     restart: unless-stopped
+    networks:
+      - monitoring_net
+
+networks:
+  monitoring_net:
+    driver: bridge
