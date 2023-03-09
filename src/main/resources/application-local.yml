@@ -23,6 +23,7 @@ spring:
       name: ENC(PzxhyS2jnzUTGLFlLktsr39y0i0k1k5v)
       password: ENC(YZyVBZaMn2WHAh75ZmSEeFqnaXGidmGl)
 
+
 management:
   endpoints:
     web:
@@ -36,6 +37,10 @@ management:
     java:
       enabled: true
     os:
+      enabled: true
+server:
+  tomcat:
+    mbeanregistry:
       enabled: true
 
 logging:
