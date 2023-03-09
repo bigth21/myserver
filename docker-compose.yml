@@ -13,3 +13,32 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    user: root
+#    command:
+#      - '--config.file=/Users/taekhyeon/Projects/myserver/monitoring/prometheus.yml'
+#      - '--web.enable-lifecycle'
+    volumes:
+      - ~/Projects/myserver/monitoring/prometheus/:/etc/prometheus/
+      - ~/Projects/myserver/monitoring/prometheus/data:/prometheus
+    ports:
+      - 9090:9090
+    restart: unless-stopped
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=test1234
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ~/Projects/myserver/monitoring/grafana:/var/lib/grafana
+      - ~/Projects/myserver/monitoring/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus
+    restart: always

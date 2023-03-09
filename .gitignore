@@ -35,3 +35,15 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Monitoring ###
+!monitoring
+monitoring/*
+!monitoring/prometheus
+monitoring/prometheus/*
+!monitoring/prometheus/prometheus.yml
+!monitoring/grafana
+monitoring/grafana/*
+
+
+
