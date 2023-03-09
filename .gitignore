@@ -38,12 +38,7 @@ out/
 
 ### Monitoring ###
 !monitoring
-monitoring/*
-!monitoring/prometheus
-monitoring/prometheus/*
+monitoring/**
 !monitoring/prometheus/prometheus.yml
-!monitoring/grafana
-monitoring/grafana/*
-
 
 
