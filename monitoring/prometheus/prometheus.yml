@@ -14,6 +14,6 @@ scrape_configs:
       - targets: ["localhost:9090"] #추가
   - job_name: "spring-actuator"
     metrics_path: '/actuator/prometheus'
-    scrape_interval: 1s
+    scrape_interval: 1s # Increase interval on production environment
     static_configs:
       - targets: ['host.docker.internal:8081']
