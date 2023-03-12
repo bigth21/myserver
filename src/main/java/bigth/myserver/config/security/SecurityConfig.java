@@ -49,7 +49,7 @@ public class SecurityConfig {
     @Order(2)
     @Bean
     SecurityFilterChain formSecurityFilterChain(HttpSecurity http,
-                                                       FormAuthenticationProvider authenticationProvider) throws Exception {
+                                                FormAuthenticationProvider authenticationProvider) throws Exception {
         return http
                 .securityMatcher("/**")
                 .authorizeHttpRequests()
@@ -57,7 +57,8 @@ public class SecurityConfig {
                 .requestMatchers("/strings/**").permitAll()
                 .requestMatchers("/users/sign-up").permitAll()
                 .requestMatchers("/users/sign-in*").permitAll()
-                .requestMatchers(("/admin/**")).hasRole(ROLE_ADMIN.getRole())
+                .requestMatchers("/admin/**").hasRole(ROLE_ADMIN.getRole())
+                .requestMatchers("/actuator/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
@@ -106,7 +107,7 @@ public class SecurityConfig {
     @Order(1)
     @Bean
     SecurityFilterChain apiSecurityFilterChain(HttpSecurity http,
-                                                      ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
+                                               ApiAuthenticationProcessingFilter apiAuthenticationProcessingFilter) throws Exception {
         return http
                 .csrf().disable()
 
